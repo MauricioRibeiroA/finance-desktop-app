@@ -3,18 +3,103 @@
         xmlns:vm="using:FinanceApp.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
         x:Class="FinanceApp.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="FinanceApp">
+        Title="Finance Control - Controle Financeiro"
+        MinWidth="800" MinHeight="500"
+        WindowStartupLocation="CenterScreen">
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <!-- Layout principal -->
+    <Grid>
+        <!-- Background com gradiente sutil -->
+        <Border Background="{StaticResource DarkBackgroundBrush}">
+            <Border.Effect>
+                <DropShadowEffect Color="#33FFD700" BlurRadius="20" OffsetX="0" OffsetY="0" Opacity="0.1"/>
+            </Border.Effect>
+        </Border>
+        
+        <!-- Conteúdo principal -->
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="40" Margin="50">
+                
+                <!-- Cabeçalho -->
+                <StackPanel Spacing="16" HorizontalAlignment="Center">
+                    <TextBlock Text="💰" Classes="Icon" Foreground="{StaticResource AccentYellowBrush}"/>
+                    <TextBlock Text="FINANCE CONTROL" Classes="Title" Margin="0,0,0,8"/>
+                    <TextBlock Text="Controle Financeiro Pessoal" Classes="Subtitle" Margin="0,0,0,24"/>
+                </StackPanel>
+                
+                <!-- Painel central com botões -->
+                <Border Classes="Panel" MaxWidth="500">
+                    <StackPanel Spacing="32">
+                        
+                        <!-- Pergunta principal -->
+                        <TextBlock Text="O que você gostaria de fazer hoje?" 
+                                   FontSize="20" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                   TextAlignment="Center"
+                                   Margin="0,0,0,16"/>
+                        
+                        <!-- Botões principais -->
+                        <Grid ColumnDefinitions="*,20,*" MaxWidth="400">
+                            
+                            <!-- Botão Lançamento -->
+                            <Button Grid.Column="0" 
+                                    Classes="PrimaryButton"
+                                    Name="LaunchButton"
+                                    Click="OnLaunchButtonClick"
+                                    MinHeight="80">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="📝" FontSize="28" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="LANÇAMENTO" FontWeight="Bold" FontSize="14" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Registrar receita ou despesa" 
+                                               FontSize="11" 
+                                               Opacity="0.8" 
+                                               HorizontalAlignment="Center"
+                                               TextAlignment="Center"
+                                               TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Button>
+                            
+                            <!-- Botão Dashboard -->
+                            <Button Grid.Column="2" 
+                                    Classes="SecondaryButton"
+                                    Name="DashboardButton"
+                                    Click="OnDashboardButtonClick"
+                                    MinHeight="80">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="📊" FontSize="28" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="DASHBOARD" FontWeight="Bold" FontSize="14" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Ver relatórios e gráficos" 
+                                               FontSize="11" 
+                                               Opacity="0.8" 
+                                               HorizontalAlignment="Center"
+                                               TextAlignment="Center"
+                                               TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Button>
+                            
+                        </Grid>
+                        
+                    </StackPanel>
+                </Border>
+                
+                <!-- Footer -->
+                <TextBlock Text="Finance Control v1.0 - Desenvolvido com ❤️" 
+                           Classes="Subtitle"
+                           FontSize="12" 
+                           Opacity="0.6"
+                           Margin="0,24,0,0"/>
+                           
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
 
 </Window>

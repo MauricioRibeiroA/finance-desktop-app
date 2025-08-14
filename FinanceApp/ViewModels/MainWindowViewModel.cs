@@ -2,5 +2,10 @@
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    public string Greeting { get; } = "Welcome to Avalonia!";
+    // ViewModel para a tela inicial
+    // Por enquanto, não precisamos de propriedades específicas
+    // Os botões são tratados diretamente no code-behind
+    
+    public string AppName { get; } = "Finance Control";
+    public string AppDescription { get; } = "Controle Financeiro Pessoal";
 }
