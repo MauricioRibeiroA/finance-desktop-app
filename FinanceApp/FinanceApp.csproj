@@ -6,6 +6,16 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    
+    <!-- Application Information -->
+    <ApplicationIcon>Assets/finance-icon.ico</ApplicationIcon>
+    <AssemblyTitle>Finance Control</AssemblyTitle>
+    <Product>Finance Control - Controle Financeiro</Product>
+    <Company>Finance Control</Company>
+    <Description>Aplicativo desktop para controle financeiro pessoal offline</Description>
+    <Copyright>© 2025 Finance Control</Copyright>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
