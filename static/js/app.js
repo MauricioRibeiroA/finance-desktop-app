@@ -85,12 +85,16 @@ class FinanceApp {
         // Hide all slides
         document.querySelectorAll('.slide').forEach(slide => {
             slide.classList.remove('active', 'prev');
+            slide.style.transform = 'translateX(100%)';
+            slide.style.opacity = '0';
         });
         
         // Show target slide
         const targetSlide = document.getElementById(`slide-${slideId}`);
         if (targetSlide) {
             targetSlide.classList.add('active');
+            targetSlide.style.transform = 'translateX(0)';
+            targetSlide.style.opacity = '1';
             this.currentSlideId = slideId;
         }
     }

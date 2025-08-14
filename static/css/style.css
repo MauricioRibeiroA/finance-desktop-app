@@ -79,6 +79,13 @@ body {
     justify-content: center;
     transition: var(--slide-transition);
     transform: translateX(100%);
+    opacity: 0;
+}
+
+/* Show welcome slide by default */
+.slide[data-slide="welcome"] {
+    transform: translateX(0);
+    opacity: 1;
 }
 
 .slide.active {
