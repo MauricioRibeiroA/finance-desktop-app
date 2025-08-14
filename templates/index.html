@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Web App - Controle Financeiro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1><i class="fas fa-wallet"></i> Finance Web App</h1>
+                <div class="theme-toggle">
+                    <button id="themeToggle" class="btn-icon">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            
+            <!-- Dashboard Cards -->
+            <section class="dashboard-cards">
+                <div class="card income-card">
+                    <div class="card-icon">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Receitas</h3>
+                        <p class="card-value" id="totalIncome">R$ 0,00</p>
+                        <small>Este mês</small>
+                    </div>
+                </div>
+                
+                <div class="card expense-card">
+                    <div class="card-icon">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Despesas</h3>
+                        <p class="card-value" id="totalExpense">R$ 0,00</p>
+                        <small>Este mês</small>
+                    </div>
+                </div>
+                
+                <div class="card balance-card">
+                    <div class="card-icon">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Saldo</h3>
+                        <p class="card-value" id="balance">R$ 0,00</p>
+                        <small>Disponível</small>
+                    </div>
+                </div>
+                
+                <div class="card transactions-card">
+                    <div class="card-icon">
+                        <i class="fas fa-list"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Transações</h3>
+                        <p class="card-value" id="totalTransactions">0</p>
+                        <small>Este mês</small>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Charts Section -->
+            <section class="charts-section">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-chart-pie"></i> Despesas por Categoria</h3>
+                    </div>
+                    <canvas id="expenseChart"></canvas>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-chart-line"></i> Fluxo Mensal</h3>
+                    </div>
+                    <canvas id="flowChart"></canvas>
+                </div>
+            </section>
+
+            <!-- Transaction Form -->
+            <section class="form-section">
+                <div class="form-container">
+                    <div class="form-header">
+                        <h3><i class="fas fa-plus"></i> Nova Transação</h3>
+                    </div>
+                    
+                    <form id="transactionForm" class="transaction-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="description">
+                                    <i class="fas fa-edit"></i> Descrição
+                                </label>
+                                <input type="text" id="description" name="description" required 
+                                       placeholder="Ex: Almoço no restaurante">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="amount">
+                                    <i class="fas fa-dollar-sign"></i> Valor (R$)
+                                </label>
+                                <input type="number" id="amount" name="amount" step="0.01" required 
+                                       placeholder="0,00">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="category">
+                                    <i class="fas fa-tags"></i> Categoria
+                                </label>
+                                <select id="category" name="category" required>
+                                    <option value="">Selecione uma categoria</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="date">
+                                    <i class="fas fa-calendar"></i> Data
+                                </label>
+                                <input type="date" id="date" name="date" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-exchange-alt"></i> Tipo
+                            </label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="transaction_type" value="expense" checked>
+                                    <span class="radio-custom expense"></span>
+                                    <i class="fas fa-arrow-down"></i> Despesa
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="transaction_type" value="income">
+                                    <span class="radio-custom income"></span>
+                                    <i class="fas fa-arrow-up"></i> Receita
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Adicionar Transação
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Transactions List -->
+            <section class="transactions-section">
+                <div class="transactions-header">
+                    <h3><i class="fas fa-history"></i> Transações Recentes</h3>
+                    <div class="transactions-controls">
+                        <button id="refreshTransactions" class="btn btn-secondary">
+                            <i class="fas fa-sync-alt"></i> Atualizar
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="transactions-list" id="transactionsList">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Carregando...
+                    </div>
+                </div>
+                
+                <div class="pagination" id="pagination">
+                    <!-- Pagination controls will be inserted here -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Finance Web App | <i class="fas fa-heart"></i> Feito com Python + Flask</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='libs/chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
