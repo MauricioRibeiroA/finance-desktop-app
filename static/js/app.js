@@ -1,41 +1,112 @@
-// Finance Web App - Main JavaScript
+// Finance Web App - Slide Navigation System
 class FinanceApp {
     constructor() {
-        this.charts = {};
-        this.currentPage = 1;
-        this.categories = [];
+        this.currentSlide = 0;
+        this.userName = '';
+        this.slides = ['welcome', 'menu', 'investment-type', 'renda-fixa', 'tesouro-direto'];
         
         this.init();
     }
 
     async init() {
-        await this.loadCategories();
-        this.setupEventListeners();
-        this.setupTheme();
-        this.setTodayDate();
-        await this.loadDashboard();
-        await this.loadTransactions();
+        this.setupSlideNavigation();
+        this.setupTesouroDiretoCalculations();
+        this.showSlide('welcome');
     }
 
-    // API Methods
-    async apiRequest(endpoint, options = {}) {
-        try {
-            const response = await fetch(`/api${endpoint}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                ...options
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+    // Slide Navigation Methods
+    setupSlideNavigation() {
+        // Welcome Screen Events
+        const userName = document.getElementById('userName');
+        const btnContinue = document.getElementById('btnContinue');
+        
+        userName.addEventListener('input', () => {
+            btnContinue.disabled = userName.value.trim() === '';
+        });
+        
+        btnContinue.addEventListener('click', () => {
+            this.userName = userName.value.trim();
+            document.getElementById('userNameDisplay').textContent = this.userName;
+            this.navigateToSlide('menu');
+        });
+        
+        // Menu Screen Events
+        document.getElementById('btnLancarOperacao').addEventListener('click', () => {
+            this.navigateToSlide('investment-type');
+        });
+        
+        document.getElementById('btnConsultarDashboard').addEventListener('click', () => {
+            this.showNotification('Dashboard em desenvolvimento', 'info');
+        });
+        
+        // Investment Type Events
+        document.getElementById('btnRendaFixa').addEventListener('click', () => {
+            this.navigateToSlide('renda-fixa');
+        });
+        
+        // Renda Fixa Events
+        document.getElementById('btnTitutosTesouro').addEventListener('click', () => {
+            this.navigateToSlide('tesouro-direto');
+            this.setTodayDate();
+        });
+        
+        // Back button events
+        document.getElementById('btnBackToWelcome').addEventListener('click', () => {
+            this.navigateToSlide('welcome');
+        });
+        
+        document.getElementById('btnBackToMenu').addEventListener('click', () => {
+            this.navigateToSlide('menu');
+        });
+        
+        document.getElementById('btnBackToInvestment').addEventListener('click', () => {
+            this.navigateToSlide('investment-type');
+        });
+        
+        document.getElementById('btnBackToRendaFixa').addEventListener('click', () => {
+            this.navigateToSlide('renda-fixa');
+        });
+        
+        // Tesouro Direto Form Events
+        document.getElementById('tesouroForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.handleTesouroDiretoSubmit(e);
+        });
+        
+        document.getElementById('btnCancel').addEventListener('click', () => {
+            if (confirm('Deseja cancelar? Todos os dados serão perdidos.')) {
+                document.getElementById('tesouroForm').reset();
+                this.navigateToSlide('renda-fixa');
             }
-
-            return await response.json();
-        } catch (error) {
-            console.error('API request failed:', error);
-            this.showNotification('Erro na comunicação com o servidor', 'error');
-            throw error;
+        });
+    }
+    
+    showSlide(slideId) {
+        // Hide all slides
+        document.querySelectorAll('.slide').forEach(slide => {
+            slide.classList.remove('active', 'prev');
+        });
+        
+        // Show target slide
+        const targetSlide = document.getElementById(`slide-${slideId}`);
+        if (targetSlide) {
+            targetSlide.classList.add('active');
+            this.currentSlideId = slideId;
+        }
+    }
+    
+    navigateToSlide(slideId) {
+        const currentSlide = document.querySelector('.slide.active');
+        const targetSlide = document.getElementById(`slide-${slideId}`);
+        
+        if (currentSlide) {
+            currentSlide.classList.remove('active');
+            currentSlide.classList.add('prev');
+        }
+        
+        if (targetSlide) {
+            targetSlide.classList.add('active');
+            this.currentSlideId = slideId;
         }
     }
 
@@ -147,7 +218,121 @@ class FinanceApp {
 
     setTodayDate() {
         const today = new Date().toISOString().split('T')[0];
-        document.getElementById('date').value = today;
+        const dataOperacao = document.getElementById('dataOperacao');
+        if (dataOperacao) {
+            dataOperacao.value = today;
+        }
+    }
+    
+    // Tesouro Direto Methods
+    setupTesouroDiretoCalculations() {
+        // Setup automatic calculations when form fields change
+        setTimeout(() => {
+            const puLimpo = document.getElementById('puLimpo');
+            const jurosAcumulados = document.getElementById('jurosAcumulados');
+            const quantidade = document.getElementById('quantidade');
+            const puSujo = document.getElementById('puSujo');
+            const valorBruto = document.getElementById('valorBruto');
+            const taxasEmolumentos = document.getElementById('taxasEmolumentos');
+            const irRetido = document.getElementById('irRetido');
+            const outrosCustos = document.getElementById('outrosCustos');
+            const valorLiquido = document.getElementById('valorLiquido');
+            const tipoMovimento = document.getElementById('tipoMovimento');
+            
+            if (puLimpo && jurosAcumulados && quantidade) {
+                [puLimpo, jurosAcumulados, quantidade, taxasEmolumentos, irRetido, outrosCustos, tipoMovimento].forEach(field => {
+                    if (field) {
+                        field.addEventListener('input', () => this.calculateTesouroDiretoValues());
+                        field.addEventListener('change', () => this.calculateTesouroDiretoValues());
+                    }
+                });
+            }
+        }, 100);
+    }
+    
+    calculateTesouroDiretoValues() {
+        const puLimpo = parseFloat(document.getElementById('puLimpo')?.value || 0);
+        const jurosAcumulados = parseFloat(document.getElementById('jurosAcumulados')?.value || 0);
+        const quantidade = parseFloat(document.getElementById('quantidade')?.value || 0);
+        const taxasEmolumentos = parseFloat(document.getElementById('taxasEmolumentos')?.value || 0);
+        const irRetido = parseFloat(document.getElementById('irRetido')?.value || 0);
+        const outrosCustos = parseFloat(document.getElementById('outrosCustos')?.value || 0);
+        const tipoMovimento = document.getElementById('tipoMovimento')?.value;
+        
+        // Calculate PU Sujo = PU Limpo + Juros Acumulados
+        const puSujoValue = puLimpo + jurosAcumulados;
+        const puSujoField = document.getElementById('puSujo');
+        if (puSujoField) {
+            puSujoField.value = puSujoValue.toFixed(2);
+        }
+        
+        // Calculate Valor Bruto = Quantidade × PU Sujo
+        const valorBrutoValue = quantidade * puSujoValue;
+        const valorBrutoField = document.getElementById('valorBruto');
+        if (valorBrutoField) {
+            valorBrutoField.value = valorBrutoValue.toFixed(2);
+        }
+        
+        // Calculate Valor Líquido based on transaction type
+        let valorLiquidoValue = 0;
+        if (tipoMovimento === 'Compra') {
+            // For purchases: Valor Bruto + Costs
+            valorLiquidoValue = valorBrutoValue + taxasEmolumentos + outrosCustos;
+        } else if (tipoMovimento === 'Venda') {
+            // For sales: Valor Bruto - Costs - IR
+            valorLiquidoValue = valorBrutoValue - taxasEmolumentos - irRetido - outrosCustos;
+        } else {
+            // For other operations: Valor Bruto
+            valorLiquidoValue = valorBrutoValue;
+        }
+        
+        const valorLiquidoField = document.getElementById('valorLiquido');
+        if (valorLiquidoField) {
+            valorLiquidoField.value = valorLiquidoValue.toFixed(2);
+        }
+    }
+    
+    handleTesouroDiretoSubmit(e) {
+        const formData = new FormData(e.target);
+        
+        // Collect all form data
+        const tesouroDiretoData = {
+            dataOperacao: formData.get('dataOperacao'),
+            tipoMovimento: formData.get('tipoMovimento'),
+            classeTitulo: formData.get('classeTitulo'),
+            nomeTitulo: formData.get('nomeTitulo'),
+            dataVencimento: formData.get('dataVencimento'),
+            indexador: formData.get('indexador'),
+            quantidade: parseFloat(formData.get('quantidade') || 0),
+            puLimpo: parseFloat(formData.get('puLimpo') || 0),
+            jurosAcumulados: parseFloat(formData.get('jurosAcumulados') || 0),
+            puSujo: parseFloat(formData.get('puSujo') || 0),
+            valorBruto: parseFloat(formData.get('valorBruto') || 0),
+            taxasEmolumentos: parseFloat(formData.get('taxasEmolumentos') || 0),
+            irRetido: parseFloat(formData.get('irRetido') || 0),
+            outrosCustos: parseFloat(formData.get('outrosCustos') || 0),
+            valorLiquido: parseFloat(formData.get('valorLiquido') || 0),
+            observacoes: formData.get('observacoes')
+        };
+        
+        // Basic validation - only check if at least some core fields are filled
+        const hasBasicData = tesouroDiretoData.dataOperacao && tesouroDiretoData.tipoMovimento;
+        
+        if (!hasBasicData) {
+            this.showNotification('Por favor, preencha pelo menos a data e o tipo de movimento', 'error');
+            return;
+        }
+        
+        // Log the data (in a real app, this would be sent to the server)
+        console.log('Tesouro Direto Operation:', tesouroDiretoData);
+        
+        this.showNotification('Operação de Tesouro Direto salva com sucesso!', 'success');
+        
+        // Reset form and go back
+        setTimeout(() => {
+            document.getElementById('tesouroForm').reset();
+            this.navigateToSlide('menu');
+        }, 1500);
     }
 
     populateCategorySelect() {

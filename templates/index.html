@@ -3,192 +3,287 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finance Web App - Controle Financeiro</title>
+    <title>Finance App - Controle de Renda Fixa</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <h1><i class="fas fa-wallet"></i> Finance Web App</h1>
-                <div class="theme-toggle">
-                    <button id="themeToggle" class="btn-icon">
-                        <i class="fas fa-moon"></i>
+    <!-- Slide Container -->
+    <div class="slide-container">
+        <!-- Slide 1: Boas-vindas -->
+        <div class="slide" id="slide-welcome" data-slide="welcome">
+            <div class="slide-content">
+                <div class="welcome-container">
+                    <h1 class="welcome-title">
+                        <i class="fas fa-chart-line"></i>
+                        Finance App
+                    </h1>
+                    <h2 class="welcome-subtitle">Controle de Renda Fixa</h2>
+                    
+                    <div class="name-form">
+                        <label for="userName" class="name-label">Qual é o seu nome?</label>
+                        <input type="text" id="userName" class="name-input" placeholder="Digite seu nome aqui..." autofocus>
+                        <button id="btnContinue" class="btn-continue" disabled>
+                            Continuar <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Menu Principal -->
+        <div class="slide" id="slide-menu" data-slide="menu">
+            <div class="slide-content">
+                <div class="menu-container">
+                    <div class="user-greeting">
+                        <h2>Olá, <span id="userNameDisplay"></span>! 👋</h2>
+                        <p>O que você gostaria de fazer hoje?</p>
+                    </div>
+                    
+                    <div class="menu-options">
+                        <button class="menu-btn" id="btnLancarOperacao">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Lançar Operação</span>
+                        </button>
+                        
+                        <button class="menu-btn" id="btnConsultarDashboard">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Consultar Dashboard</span>
+                        </button>
+                    </div>
+                    
+                    <button class="btn-back" id="btnBackToWelcome">
+                        <i class="fas fa-arrow-left"></i> Voltar
                     </button>
                 </div>
             </div>
         </div>
-    </header>
 
-    <!-- Main Content -->
-    <main class="main">
-        <div class="container">
-            
-            <!-- Dashboard Cards -->
-            <section class="dashboard-cards">
-                <div class="card income-card">
-                    <div class="card-icon">
-                        <i class="fas fa-arrow-up"></i>
-                    </div>
-                    <div class="card-content">
-                        <h3>Receitas</h3>
-                        <p class="card-value" id="totalIncome">R$ 0,00</p>
-                        <small>Este mês</small>
-                    </div>
-                </div>
-                
-                <div class="card expense-card">
-                    <div class="card-icon">
-                        <i class="fas fa-arrow-down"></i>
-                    </div>
-                    <div class="card-content">
-                        <h3>Despesas</h3>
-                        <p class="card-value" id="totalExpense">R$ 0,00</p>
-                        <small>Este mês</small>
-                    </div>
-                </div>
-                
-                <div class="card balance-card">
-                    <div class="card-icon">
-                        <i class="fas fa-balance-scale"></i>
-                    </div>
-                    <div class="card-content">
-                        <h3>Saldo</h3>
-                        <p class="card-value" id="balance">R$ 0,00</p>
-                        <small>Disponível</small>
-                    </div>
-                </div>
-                
-                <div class="card transactions-card">
-                    <div class="card-icon">
-                        <i class="fas fa-list"></i>
-                    </div>
-                    <div class="card-content">
-                        <h3>Transações</h3>
-                        <p class="card-value" id="totalTransactions">0</p>
-                        <small>Este mês</small>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Charts Section -->
-            <section class="charts-section">
-                <div class="chart-container">
-                    <div class="chart-header">
-                        <h3><i class="fas fa-chart-pie"></i> Despesas por Categoria</h3>
-                    </div>
-                    <canvas id="expenseChart"></canvas>
-                </div>
-                
-                <div class="chart-container">
-                    <div class="chart-header">
-                        <h3><i class="fas fa-chart-line"></i> Fluxo Mensal</h3>
-                    </div>
-                    <canvas id="flowChart"></canvas>
-                </div>
-            </section>
-
-            <!-- Transaction Form -->
-            <section class="form-section">
-                <div class="form-container">
-                    <div class="form-header">
-                        <h3><i class="fas fa-plus"></i> Nova Transação</h3>
+        <!-- Slide 3: Tipo de Investimento -->
+        <div class="slide" id="slide-investment-type" data-slide="investment-type">
+            <div class="slide-content">
+                <div class="investment-container">
+                    <h2>Tipo de Investimento</h2>
+                    <p>Escolha o tipo de operação que deseja lançar:</p>
+                    
+                    <div class="investment-options">
+                        <button class="investment-btn" id="btnRendaFixa">
+                            <i class="fas fa-university"></i>
+                            <span>Renda Fixa</span>
+                            <small>Tesouro Direto, CDB, LCI, LCA</small>
+                        </button>
+                        
+                        <button class="investment-btn disabled" id="btnRendaVariavel">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Renda Variável</span>
+                            <small>Em breve...</small>
+                        </button>
                     </div>
                     
-                    <form id="transactionForm" class="transaction-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="description">
-                                    <i class="fas fa-edit"></i> Descrição
-                                </label>
-                                <input type="text" id="description" name="description" required 
-                                       placeholder="Ex: Almoço no restaurante">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="amount">
-                                    <i class="fas fa-dollar-sign"></i> Valor (R$)
-                                </label>
-                                <input type="number" id="amount" name="amount" step="0.01" required 
-                                       placeholder="0,00">
-                            </div>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="category">
-                                    <i class="fas fa-tags"></i> Categoria
-                                </label>
-                                <select id="category" name="category" required>
-                                    <option value="">Selecione uma categoria</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="date">
-                                    <i class="fas fa-calendar"></i> Data
-                                </label>
-                                <input type="date" id="date" name="date" required>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>
-                                <i class="fas fa-exchange-alt"></i> Tipo
-                            </label>
-                            <div class="radio-group">
-                                <label class="radio-label">
-                                    <input type="radio" name="transaction_type" value="expense" checked>
-                                    <span class="radio-custom expense"></span>
-                                    <i class="fas fa-arrow-down"></i> Despesa
-                                </label>
-                                <label class="radio-label">
-                                    <input type="radio" name="transaction_type" value="income">
-                                    <span class="radio-custom income"></span>
-                                    <i class="fas fa-arrow-up"></i> Receita
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Adicionar Transação
+                    <button class="btn-back" id="btnBackToMenu">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Renda Fixa -->
+        <div class="slide" id="slide-renda-fixa" data-slide="renda-fixa">
+            <div class="slide-content">
+                <div class="renda-fixa-container">
+                    <h2>Renda Fixa</h2>
+                    <p>Escolha o tipo de produto de renda fixa:</p>
+                    
+                    <div class="renda-fixa-options">
+                        <button class="renda-fixa-btn" id="btnTitutosTesouro">
+                            <i class="fas fa-landmark"></i>
+                            <span>Títulos do Tesouro</span>
+                            <small>Tesouro Direto</small>
                         </button>
+                        
+                        <button class="renda-fixa-btn disabled" id="btnCDB">
+                            <i class="fas fa-building-columns"></i>
+                            <span>CDB</span>
+                            <small>Em breve...</small>
+                        </button>
+                    </div>
+                    
+                    <button class="btn-back" id="btnBackToInvestment">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Formulário Tesouro Direto -->
+        <div class="slide" id="slide-tesouro-direto" data-slide="tesouro-direto">
+            <div class="slide-content">
+                <div class="tesouro-form-container">
+                    <div class="form-header">
+                        <h2>
+                            <i class="fas fa-landmark"></i>
+                            Tesouro Direto
+                        </h2>
+                        <p>🇧🇷 Preencha os dados da operação</p>
+                    </div>
+                    
+                    <form id="tesouroForm" class="tesouro-form">
+                        <!-- Dados da Operação -->
+                        <div class="form-section">
+                            <h3><i class="fas fa-info-circle"></i> Dados da Operação</h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Data da Operação</label>
+                                    <input type="date" id="dataOperacao" name="dataOperacao">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Tipo de Movimento</label>
+                                    <select id="tipoMovimento" name="tipoMovimento">
+                                        <option value="">Selecione...</option>
+                                        <option value="Compra">Compra</option>
+                                        <option value="Venda">Venda</option>
+                                        <option value="Cupom">Cupom</option>
+                                        <option value="Amortização">Amortização</option>
+                                        <option value="Taxa">Taxa</option>
+                                        <option value="Custódia">Custódia</option>
+                                        <option value="IR">IR</option>
+                                        <option value="Outros">Outros</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Classe do Título</label>
+                                    <select id="classeTitulo" name="classeTitulo">
+                                        <option value="">Selecione...</option>
+                                        <option value="Tesouro Prefixado">Tesouro Prefixado</option>
+                                        <option value="Tesouro Prefixado com JS">Tesouro Prefixado com JS</option>
+                                        <option value="Tesouro Selic">Tesouro Selic</option>
+                                        <option value="Tesouro IPCA+">Tesouro IPCA+</option>
+                                        <option value="Tesouro IPCA+ com JS">Tesouro IPCA+ com JS</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Nome do Título</label>
+                                    <input type="text" id="nomeTitulo" name="nomeTitulo" placeholder="Ex: Tesouro Selic 2029">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Data de Vencimento</label>
+                                    <input type="date" id="dataVencimento" name="dataVencimento">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Indexador</label>
+                                    <select id="indexador" name="indexador">
+                                        <option value="">Selecione...</option>
+                                        <option value="Prefixado">Prefixado</option>
+                                        <option value="Selic">Selic</option>
+                                        <option value="IPCA">IPCA</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Dados Financeiros -->
+                        <div class="form-section">
+                            <h3><i class="fas fa-calculator"></i> Dados Financeiros</h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Quantidade de Títulos</label>
+                                    <input type="number" id="quantidade" name="quantidade" step="0.0001" placeholder="0,0000">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>PU Limpo (R$)</label>
+                                    <input type="number" id="puLimpo" name="puLimpo" step="0.01" placeholder="0,00">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Juros Acumulados (R$)</label>
+                                    <input type="number" id="jurosAcumulados" name="jurosAcumulados" step="0.01" placeholder="0,00">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>PU Sujo (R$)</label>
+                                    <input type="number" id="puSujo" name="puSujo" step="0.01" placeholder="Calculado automaticamente" readonly>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group full-width">
+                                    <label>Valor Bruto (R$)</label>
+                                    <input type="number" id="valorBruto" name="valorBruto" step="0.01" placeholder="Calculado automaticamente" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Custos e Taxas -->
+                        <div class="form-section">
+                            <h3><i class="fas fa-receipt"></i> Custos e Taxas</h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Taxas e Emolumentos (R$)</label>
+                                    <input type="number" id="taxasEmolumentos" name="taxasEmolumentos" step="0.01" placeholder="0,00">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>IR Retido (R$)</label>
+                                    <input type="number" id="irRetido" name="irRetido" step="0.01" placeholder="0,00">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Outros Custos (R$)</label>
+                                    <input type="number" id="outrosCustos" name="outrosCustos" step="0.01" placeholder="0,00">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Valor Líquido (R$)</label>
+                                    <input type="number" id="valorLiquido" name="valorLiquido" step="0.01" placeholder="Calculado automaticamente" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Observações -->
+                        <div class="form-section">
+                            <div class="form-group full-width">
+                                <label>Observações</label>
+                                <textarea id="observacoes" name="observacoes" rows="3" placeholder="Observações adicionais (opcional)"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn-back" id="btnBackToRendaFixa">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </button>
+                            
+                            <div class="action-buttons">
+                                <button type="button" class="btn-cancel" id="btnCancel">
+                                    <i class="fas fa-times"></i> Cancelar
+                                </button>
+                                
+                                <button type="submit" class="btn-save">
+                                    <i class="fas fa-save"></i> Salvar Operação
+                                </button>
+                            </div>
+                        </div>
                     </form>
                 </div>
-            </section>
-
-            <!-- Transactions List -->
-            <section class="transactions-section">
-                <div class="transactions-header">
-                    <h3><i class="fas fa-history"></i> Transações Recentes</h3>
-                    <div class="transactions-controls">
-                        <button id="refreshTransactions" class="btn btn-secondary">
-                            <i class="fas fa-sync-alt"></i> Atualizar
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="transactions-list" id="transactionsList">
-                    <div class="loading">
-                        <i class="fas fa-spinner fa-spin"></i> Carregando...
-                    </div>
-                </div>
-                
-                <div class="pagination" id="pagination">
-                    <!-- Pagination controls will be inserted here -->
-                </div>
-            </section>
+            </div>
         </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2024 Finance Web App | <i class="fas fa-heart"></i> Feito com Python + Flask</p>
-        </div>
-    </footer>
+    </div>
 
     <!-- Scripts -->
     <script src="{{ url_for('static', filename='libs/chart.min.js') }}"></script>
