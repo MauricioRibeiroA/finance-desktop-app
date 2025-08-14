@@ -10,6 +10,7 @@ public class FinanceDbContext : DbContext
 {
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<Category> Categories { get; set; }
+    public DbSet<TesouroDireto> TesouroDireto { get; set; }
 
     public FinanceDbContext()
     {
@@ -56,6 +57,23 @@ public class FinanceDbContext : DbContext
             entity.Property(e => e.Description).HasMaxLength(200);
             entity.Property(e => e.Color).HasMaxLength(7); // Para hex colors (#FFFFFF)
             entity.Property(e => e.Icon).HasMaxLength(10);
+        });
+
+        // Configurações para TesouroDireto
+        modelBuilder.Entity<TesouroDireto>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.NomeTitulo).HasMaxLength(100).IsRequired();
+            entity.Property(e => e.QuantidadeTitulos).HasColumnType("decimal(18,4)");
+            entity.Property(e => e.PULimpo).HasColumnType("decimal(18,4)");
+            entity.Property(e => e.JurosAcumulados).HasColumnType("decimal(18,4)");
+            entity.Property(e => e.PUSujo).HasColumnType("decimal(18,4)");
+            entity.Property(e => e.ValorBruto).HasColumnType("decimal(18,2)");
+            entity.Property(e => e.TaxasEmolumentos).HasColumnType("decimal(18,2)");
+            entity.Property(e => e.IRRetido).HasColumnType("decimal(18,2)");
+            entity.Property(e => e.OutrosCustos).HasColumnType("decimal(18,2)");
+            entity.Property(e => e.ValorLiquido).HasColumnType("decimal(18,2)");
+            entity.Property(e => e.Observacoes).HasMaxLength(500);
         });
 
         // Seed data - Categorias padrão

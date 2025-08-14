@@ -1,0 +1,119 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:FinanceApp.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="500"
+        x:Class="FinanceApp.Views.InvestmentTypeView"
+        x:DataType="vm:InvestmentTypeViewModel"
+        Icon="/Assets/finance-icon.ico"
+        Title="Tipo de Investimento - Finance Control"
+        MinWidth="600" MinHeight="400"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid>
+        <!-- Background -->
+        <Border Background="{StaticResource DarkBackgroundBrush}"/>
+        
+        <!-- Conteúdo principal -->
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="40" Margin="50">
+                
+                <!-- Breadcrumb -->
+                <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Left">
+                    <Button Content="← Voltar" 
+                            Classes="SecondaryButton" 
+                            Click="OnBackClick"
+                            Padding="12,8"
+                            FontSize="14"/>
+                    <TextBlock Text="Lançamentos > Tipo de Investimento" 
+                               Foreground="{StaticResource TextSecondaryBrush}" 
+                               FontSize="14" 
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+                
+                <!-- Cabeçalho -->
+                <StackPanel Spacing="16" HorizontalAlignment="Center">
+                    <TextBlock Text="📈" Classes="Icon" Foreground="{StaticResource AccentYellowBrush}"/>
+                    <TextBlock Text="TIPO DE INVESTIMENTO" Classes="Title" Margin="0,0,0,8"/>
+                    <TextBlock Text="Escolha o tipo de investimento que deseja registrar" 
+                               Classes="Subtitle" 
+                               Margin="0,0,0,24"/>
+                </StackPanel>
+                
+                <!-- Painel central com opções -->
+                <Border Classes="Panel" MaxWidth="600">
+                    <StackPanel Spacing="32">
+                        
+                        <TextBlock Text="Qual tipo de investimento você deseja lançar?" 
+                                   FontSize="20" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                   TextAlignment="Center"
+                                   Margin="0,0,0,16"/>
+                        
+                        <!-- Botões de seleção -->
+                        <Grid ColumnDefinitions="*,20,*" MaxWidth="500">
+                            
+                            <!-- Renda Fixa -->
+                            <Button Grid.Column="0" 
+                                    Classes="PrimaryButton"
+                                    Name="RendaFixaButton"
+                                    Click="OnRendaFixaClick"
+                                    MinHeight="100">
+                                <StackPanel Spacing="12">
+                                    <TextBlock Text="🏦" FontSize="36" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="RENDA FIXA" FontWeight="Bold" FontSize="16" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Tesouro Direto, CDB, LCI, LCA, etc." 
+                                               FontSize="12" 
+                                               Opacity="0.8" 
+                                               HorizontalAlignment="Center"
+                                               TextAlignment="Center"
+                                               TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Button>
+                            
+                            <!-- Renda Variável -->
+                            <Button Grid.Column="2" 
+                                    Classes="SecondaryButton"
+                                    Name="RendaVariavelButton"
+                                    Click="OnRendaVariavelClick"
+                                    MinHeight="100">
+                                <StackPanel Spacing="12">
+                                    <TextBlock Text="📊" FontSize="36" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="RENDA VARIÁVEL" FontWeight="Bold" FontSize="16" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Ações, FIIs, ETFs, Opções, etc." 
+                                               FontSize="12" 
+                                               Opacity="0.8" 
+                                               HorizontalAlignment="Center"
+                                               TextAlignment="Center"
+                                               TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Button>
+                            
+                        </Grid>
+                        
+                    </StackPanel>
+                </Border>
+                
+                <!-- Informação adicional -->
+                <Border Background="{StaticResource MediumBackgroundBrush}" 
+                        CornerRadius="8" 
+                        Padding="20" 
+                        MaxWidth="600">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="💡 Dica:" 
+                                   FontWeight="Bold" 
+                                   Foreground="{StaticResource AccentYellowBrush}"/>
+                        <TextBlock Text="• Renda Fixa: Investimentos com rentabilidade previsível"
+                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBlock Text="• Renda Variável: Investimentos com rentabilidade que oscila conforme o mercado"
+                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                    </StackPanel>
+                </Border>
+                
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+
+</Window>

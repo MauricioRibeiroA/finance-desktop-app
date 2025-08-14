@@ -13,15 +13,9 @@ public partial class MainWindow : Window
 
     private void OnLaunchButtonClick(object? sender, RoutedEventArgs e)
     {
-        // TODO: Abrir tela de lançamento
-        // Por enquanto, vamos mostrar uma mensagem
-        ShowMessage("Funcionalidade de Lançamento", 
-                   "🚀 Esta funcionalidade permitirá:\n\n" +
-                   "• Adicionar novas receitas\n" +
-                   "• Registrar despesas\n" +
-                   "• Categorizar transações\n" +
-                   "• Adicionar notas e detalhes\n\n" +
-                   "Em breve!");
+        // Abrir tela de seleção de tipo de investimento
+        var investmentTypeView = new InvestmentTypeView();
+        investmentTypeView.Show();
     }
 
     private void OnDashboardButtonClick(object? sender, RoutedEventArgs e)
