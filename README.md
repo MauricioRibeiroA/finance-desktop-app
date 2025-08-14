@@ -21,24 +21,26 @@ Um aplicativo desktop para controle de finanças pessoais offline, desenvolvido 
 
 ## Como executar
 
-1. Clone o repositório:
-```bash
-git clone <url-do-repositorio>
-cd finance-desktop-app
-```
+### 🪟 **Windows (SUPER FÁCIL)**:
 
-2. Navegue até o projeto:
-```bash
-cd FinanceApp
-```
+**Método 1 - Duplo clique:**
+1. **Duplo clique** no arquivo `EXECUTAR_WINDOWS.bat`
+2. **Pronto!** ✨ (ele verifica tudo automaticamente)
 
-3. Restaure as dependências:
+**Método 2 - Manual:**
+1. Baixe .NET Runtime: https://dotnet.microsoft.com/download
+2. Abra PowerShell na pasta do projeto
+3. Execute: `cd FinanceApp` e `dotnet run`
+
+📖 **Guias**: 
+- [INICIO_RAPIDO.md](INICIO_RAPIDO.md) - 3 passos rápidos
+- [COMO_USAR_NO_WINDOWS.md](COMO_USAR_NO_WINDOWS.md) - Guia completo
+
+### 🐧 **Linux/macOS**:
 ```bash
+git clone https://github.com/MauricioRibeiroA/finance-desktop-app.git
+cd finance-desktop-app/FinanceApp
 dotnet restore
-```
-
-4. Execute o aplicativo:
-```bash
 dotnet run
 ```
 
