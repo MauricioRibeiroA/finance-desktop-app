@@ -1,0 +1,51 @@
+{
+  "name": "finance-desktop-app",
+  "version": "1.0.0",
+  "description": "Aplicação Desktop para Gestão Financeira com foco em Renda Fixa",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build-win": "electron-builder --win",
+    "dev": "electron . --dev"
+  },
+  "keywords": [
+    "finance",
+    "desktop",
+    "tesouro-direto",
+    "investment"
+  ],
+  "author": "Finance App",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  },
+  "dependencies": {
+    "sqlite3": "^5.1.6",
+    "better-sqlite3": "^9.2.2"
+  },
+  "build": {
+    "appId": "com.financeapp.desktop",
+    "productName": "Finance Desktop App",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "database.js",
+      "templates/",
+      "static/",
+      "node_modules/"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "static/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}

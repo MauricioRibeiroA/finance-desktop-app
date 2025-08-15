@@ -11,7 +11,31 @@ class FinanceApp {
     async init() {
         this.setupSlideNavigation();
         this.setupTesouroDiretoCalculations();
+        this.loadUserData();
         this.showSlide('welcome');
+    }
+    
+    loadUserData() {
+        // Load saved user name
+        const savedUserName = localStorage.getItem('financeApp-userName');
+        if (savedUserName) {
+            this.userName = savedUserName;
+            document.getElementById('userName').value = savedUserName;
+            document.getElementById('btnContinue').disabled = false;
+            
+            // Also update the display name if it exists
+            const userNameDisplay = document.getElementById('userNameDisplay');
+            if (userNameDisplay) {
+                userNameDisplay.textContent = savedUserName;
+            }
+        }
+    }
+    
+    saveUserData() {
+        // Save user name to localStorage
+        if (this.userName) {
+            localStorage.setItem('financeApp-userName', this.userName);
+        }
     }
 
     // Slide Navigation Methods
@@ -27,6 +51,7 @@ class FinanceApp {
         btnContinue.addEventListener('click', () => {
             this.userName = userName.value.trim();
             document.getElementById('userNameDisplay').textContent = this.userName;
+            this.saveUserData(); // Save to localStorage
             this.navigateToSlide('menu');
         });
         
@@ -103,14 +128,27 @@ class FinanceApp {
         const currentSlide = document.querySelector('.slide.active');
         const targetSlide = document.getElementById(`slide-${slideId}`);
         
-        if (currentSlide) {
-            currentSlide.classList.remove('active');
-            currentSlide.classList.add('prev');
-        }
+        console.log('Navigating from:', this.currentSlideId, 'to:', slideId);
+        console.log('Current slide:', currentSlide);
+        console.log('Target slide:', targetSlide);
         
+        // Hide all slides first
+        document.querySelectorAll('.slide').forEach(slide => {
+            slide.classList.remove('active', 'prev');
+            slide.style.transform = 'translateX(100%)';
+            slide.style.opacity = '0';
+        });
+        
+        // Show target slide
         if (targetSlide) {
             targetSlide.classList.add('active');
+            targetSlide.style.transform = 'translateX(0)';
+            targetSlide.style.opacity = '1';
             this.currentSlideId = slideId;
+            
+            console.log('Successfully navigated to:', slideId);
+        } else {
+            console.error('Target slide not found:', `slide-${slideId}`);
         }
     }
 
@@ -296,7 +334,7 @@ class FinanceApp {
         }
     }
     
-    handleTesouroDiretoSubmit(e) {
+    async handleTesouroDiretoSubmit(e) {
         const formData = new FormData(e.target);
         
         // Collect all form data
@@ -327,16 +365,25 @@ class FinanceApp {
             return;
         }
         
-        // Log the data (in a real app, this would be sent to the server)
-        console.log('Tesouro Direto Operation:', tesouroDiretoData);
-        
-        this.showNotification('Operação de Tesouro Direto salva com sucesso!', 'success');
-        
-        // Reset form and go back
-        setTimeout(() => {
-            document.getElementById('tesouroForm').reset();
-            this.navigateToSlide('menu');
-        }, 1500);
+        try {
+            // Save to database via Electron API
+            const result = await window.electronAPI.addInvestment(tesouroDiretoData);
+            
+            if (result.success) {
+                this.showNotification('Operação de Tesouro Direto salva com sucesso!', 'success');
+                
+                // Reset form and go back
+                setTimeout(() => {
+                    document.getElementById('tesouroForm').reset();
+                    this.navigateToSlide('menu');
+                }, 1500);
+            } else {
+                this.showNotification('Erro ao salvar operação', 'error');
+            }
+        } catch (error) {
+            console.error('Erro ao salvar Tesouro Direto:', error);
+            this.showNotification('Erro ao salvar operação. Tente novamente.', 'error');
+        }
     }
 
     populateCategorySelect() {
@@ -644,6 +691,32 @@ class FinanceApp {
                 }
             }
         });
+    }
+
+    // API Request Helper
+    async apiRequest(endpoint, options = {}) {
+        const defaultOptions = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+        
+        const config = { ...defaultOptions, ...options };
+        
+        try {
+            const response = await fetch(`/api${endpoint}`, config);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            return await response.json();
+        } catch (error) {
+            console.error('API Request failed:', error);
+            this.showNotification('Erro de comunicação com o servidor', 'error');
+            throw error;
+        }
     }
 
     // Utility Methods
